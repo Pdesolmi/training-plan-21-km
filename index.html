@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Half Marathon Plan — April 12</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Barlow+Condensed:wght@300;600;800&family=Barlow:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+ :root {
+ --bg: #0d0f0e;
+ --surface: #141714;
+ --card: #1a1e1a;
+ --border: #2a2f2a;
+ --green: #b8f542;
+ --green-dim: #7aaa1e;
+ --orange: #ff8c42;
+ --red: #ff4d6d;
+ --blue: #42c8f5;
+ --muted: #5a6359;
+ --text: #d4e0d1;
+ --text-dim: #8a9e87;
+ }
+ * { margin: 0; padding: 0; box-sizing: border-box; }
+ body { background: var(--bg); color: var(--text); font-family: 'Barlow', sans-serif; font-weight: 300; min-height: 100vh; padding: 40px 24px 80px; }
+ .noise { position: fixed; inset: 0; pointer-events: none; z-index: 0; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E"); opacity: 0.4; }
+ .wrap { max-width: 760px; margin: 0 auto; position: relative; z-index: 1; }
+ header { margin-bottom: 48px; }
+ .eyebrow { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.2em; color: var(--green); text-transform: uppercase; margin-bottom: 12px; }
+ h1 { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: clamp(52px, 10vw, 88px); line-height: 0.9; color: #fff; text-transform: uppercase; letter-spacing: -0.02em; }
+ h1 span { color: var(--green); }
+ .subtitle { margin-top: 20px; color: var(--text-dim); font-size: 15px; line-height: 1.6; max-width: 480px; }
+ .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 2px; margin-bottom: 48px; background: var(--border); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }
+ .stat { background: var(--card); padding: 20px 18px; text-align: center; }
+ .stat-val { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 28px; color: var(--green); letter-spacing: -0.02em; }
+ .stat-label { font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; margin-top: 4px; }
+ .section-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 13px; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+ .week { margin-bottom: 24px; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; transition: border-color 0.2s; }
+ .week:hover { border-color: var(--green-dim); }
+ .week-header { display: flex; align-items: center; gap: 16px; padding: 16px 20px; background: var(--card); border-bottom: 1px solid var(--border); }
+ .week-num { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 13px; letter-spacing: 0.15em; color: var(--muted); text-transform: uppercase; min-width: 60px; }
+ .week-title { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 20px; color: #fff; flex: 1; }
+ .week-badge { font-family: 'DM Mono', monospace; font-size: 10px; padding: 4px 10px; border-radius: 4px; letter-spacing: 0.1em; text-transform: uppercase; }
+ .badge-build { background: #1a2e0f; color: var(--green); }
+ .badge-push { background: #2e1a0f; color: var(--orange); }
+ .badge-taper { background: #0f1e2e; color: var(--blue); }
+ .badge-race { background: #2e0f15; color: var(--red); }
+ .week-days { padding: 4px 0; }
+ .day-row { display: grid; grid-template-columns: 90px 1fr auto; align-items: start; gap: 16px; padding: 12px 20px; border-bottom: 1px solid #1a1f1a; transition: background 0.15s; }
+ .day-row:last-child { border-bottom: none; }
+ .day-row:hover { background: rgba(184,245,66,0.03); }
+ .day-row.rest { opacity: 0.45; }
+ .day-row.done { opacity: 0.6; }
+ .day-row.done .run-dist { color: var(--muted); text-decoration: line-through; }
+ .done-badge { display: inline-block; font-family: 'DM Mono', monospace; font-size: 9px; letter-spacing: 0.1em; text-transform: uppercase; background: #1a2e0f; color: var(--green); padding: 2px 7px; border-radius: 3px; margin-left: 8px; vertical-align: middle; }
+ .done-actual { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--green-dim); margin-top: 4px; }
+ .day-name { font-family: 'DM Mono', monospace; font-size: 11px; letter-spacing: 0.12em; color: var(--muted); text-transform: uppercase; padding-top: 2px; }
+ .run-type { font-size: 14px; color: var(--text); line-height: 1.5; }
+ .run-type strong { color: #fff; font-weight: 500; }
+ .run-tip { font-size: 12px; color: var(--text-dim); margin-top: 3px; }
+ .run-dist { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 18px; color: var(--green); white-space: nowrap; text-align: right; padding-top: 2px; }
+ .run-dist.rest-label { color: var(--muted); font-size: 13px; font-weight: 400; font-family: 'DM Mono', monospace; letter-spacing: 0.05em; }
+ .pace-guide { margin-top: 40px; padding: 24px; background: var(--card); border: 1px solid var(--border); border-radius: 10px; }
+ .pace-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 16px; }
+ .pace-name { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 16px; color: #fff; margin-bottom: 2px; }
+ .pace-val { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--green); margin-bottom: 4px; }
+ .pace-desc { font-size: 12px; color: var(--text-dim); line-height: 1.5; }
+ .key-insight { margin-top: 40px; padding: 20px 24px; background: linear-gradient(135deg, #0f1f0a, #141714); border: 1px solid var(--green-dim); border-left: 3px solid var(--green); border-radius: 8px; }
+ .key-insight p { font-size: 14px; color: var(--text); line-height: 1.7; }
+ .key-insight p + p { margin-top: 10px; }
+ .key-insight strong { color: var(--green); font-weight: 500; }
+ .race-block { margin-top: 24px; padding: 28px; background: linear-gradient(135deg, #1e0810, #0d0f0e); border: 1px solid #5a1a2a; border-radius: 10px; text-align: center; }
+ .race-block .big { font-family: 'Barlow Condensed', sans-serif; font-weight: 800; font-size: 64px; color: var(--red); letter-spacing: -0.02em; line-height: 1; }
+ .race-block .sub { color: var(--text-dim); font-size: 14px; margin-top: 8px; }
+ .vol-row { display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; gap: 12px; }
+ .vol-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); letter-spacing: 0.08em; white-space: nowrap; }
+ .vol-dates { display: block; font-size: 9px; color: #3a4a39; margin-top: 2px; letter-spacing: 0.04em; }
+ .vol-bar-wrap { height: 28px; background: #1a1e1a; border-radius: 3px; overflow: hidden; }
+ .vol-bar { height: 100%; border-radius: 3px; background: var(--green-dim); transition: width 0.3s ease; min-width: 4px; }
+ .vol-bar.vol-done { background: var(--green); opacity: 0.7; }
+ .vol-bar.vol-peak { background: var(--orange); }
+ .vol-bar.vol-taper { background: var(--blue); opacity: 0.7; }
+ .vol-bar.vol-race { background: var(--red); opacity: 0.8; }
+ .vol-km { font-family: 'Barlow Condensed', sans-serif; font-weight: 600; font-size: 15px; color: var(--text); white-space: nowrap; text-align: right; }
+ @media (max-width: 520px) { .stats { grid-template-columns: repeat(2, 1fr); } .pace-grid { grid-template-columns: 1fr 1fr; } .day-row { grid-template-columns: 70px 1fr auto; gap: 10px; } }
+</style>
+</head>
+<body>
+<div class="noise"></div>
+<div class="wrap">
+
+ <header>
+ <div class="eyebrow">▶️ Race day: April 12, 2026</div>
+ <h1>Half<br><span>Marathon</span><br>Plan</h1>
+ <p class="subtitle">Based on your Garmin data — your natural pace is 5:30–5:50/km. You need 5:00/km to crack 1:45. This plan bridges that gap.</p>
+ </header>
+
+ <div class="stats">
+ <div class="stat"><div class="stat-val">5:00</div><div class="stat-label">Target pace</div></div>
+ <div class="stat"><div class="stat-val">1:44</div><div class="stat-label">Goal time</div></div>
+ <div class="stat"><div class="stat-val">3 wks</div><div class="stat-label">Until race</div></div>
+ <div class="stat"><div class="stat-val">3-4×</div><div class="stat-label">Runs / week</div></div>
+ </div>
+
+ <div class="section-title">Your Plan</div>
+
+ <!-- WEEK 1 -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 1</div>
+ <div class="week-title">Rebuild the base</div>
+ <div class="week-badge badge-build">Mar 4–9</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row done"><div class="day-name">Tue Mar 4</div><div><div class="run-type"><strong>Easy run</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">8.0 km · avg 5:40/km · HR 160</div></div><div class="run-dist">8 km</div></div>
+ <div class="day-row done"><div class="day-name">Thu Mar 6</div><div><div class="run-type"><strong>Tempo intervals</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">7.9 km · 3×1km @ 4:50–5:00 · HR 160 avg / 186 max · TE 4.0</div></div><div class="run-dist">8 km</div></div>
+ <div class="day-row done"><div class="day-name">Sun Mar 8</div><div><div class="run-type"><strong>Long run</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">13.04 km · 72:19 · avg 5:30/km · HR 164 avg / 191 max</div></div><div class="run-dist">13 km</div></div>
+ <div class="day-row rest"><div class="day-name">Mon / Fri</div><div><div class="run-type">Rest or walk</div></div><div class="run-dist rest-label">off</div></div>
+ </div>
+ </div>
+
+ <!-- WEEK 2 -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 2</div>
+ <div class="week-title">Build volume + race pace</div>
+ <div class="week-badge badge-build">Mar 9–15</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row done"><div class="day-name">Mon Mar 9</div><div><div class="run-type"><strong>Easy recovery</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">4.65 km · 28:34 · avg 6:06/km · HR 142 avg · Z1-Z2: 62%</div></div><div class="run-dist">5 km</div></div>
+ <div class="day-row done"><div class="day-name">Tue Mar 10</div><div><div class="run-type"><strong>Easy run</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">7.00 km · 40:35 · avg 5:45/km · HR 154 avg · HR spike = uphill finish</div></div><div class="run-dist">7 km</div></div>
+ <div class="day-row done"><div class="day-name">Thu Mar 12</div><div><div class="run-type"><strong>Tempo — upgraded</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">7.47 km · 4×1km @ 4:47–4:55 · HR 162 avg / 195 max · Rep 4 fastest (4:43) 💪</div></div><div class="run-dist">8 km</div></div>
+ <div class="day-row done"><div class="day-name">Sun Mar 15</div><div><div class="run-type"><strong>Long run</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">15.00 km · 1:23:23 · avg 5:29/km · HR 155 avg · last 3km @ 4:42–4:52 💪</div></div><div class="run-dist">15 km</div></div>
+ </div>
+ </div>
+
+ <!-- WEEK 3 -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 3</div>
+ <div class="week-title">Peak week — quality over volume</div>
+ <div class="week-badge badge-push">Mar 16–22</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row done"><div class="day-name">Mon Mar 16</div><div><div class="run-type"><strong>Easy recovery</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">5.77 km · 33:54 · avg 5:44/km · HR 156 avg · cut short, tired ankles — good call</div></div><div class="run-dist">6 km</div></div>
+ <div class="day-row rest"><div class="day-name">Tue Mar 17</div><div><div class="run-type">Full rest — 9 hours sleep ✓</div></div><div class="run-dist rest-label">off</div></div>
+ <div class="day-row rest"><div class="day-name">Wed Mar 18</div><div><div class="run-type">Yoga + climbing — active recovery</div></div><div class="run-dist rest-label">off</div></div>
+ <div class="day-row done"><div class="day-name">Thu Mar 20</div><div><div class="run-type"><strong>Sustained tempo</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">8.11 km · 5km @ 4:43–4:48/km continuous · HR 158 avg / 183 max · best session of plan 🔥</div></div><div class="run-dist">8 km</div></div>
+ <div class="day-row done"><div class="day-name">Sun Mar 22</div><div><div class="run-type"><strong>Long run — easy</strong> <span class="done-badge">✓ done</span></div><div class="done-actual">16.2 km · 1:30:39 · avg 5:35/km · HR 151 avg · negative split, controlled ✅</div></div><div class="run-dist">16 km</div></div>
+ </div>
+ </div>
+
+ <!-- WEEK 4 -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 4</div>
+ <div class="week-title">Last hard week</div>
+ <div class="week-badge badge-push">Mar 23–29</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row"><div class="day-name">Tue Mar 24</div><div><div class="run-type"><strong>Easy run</strong></div><div class="run-tip">Legs should start to feel fresher. Keep it easy.</div></div><div class="run-dist">7 km</div></div>
+ <div class="day-row"><div class="day-name">Thu Mar 26</div><div><div class="run-type"><strong>Race simulation</strong></div><div class="run-tip">1 km warm-up → 8 km @ exactly 5:00/km → 1 km cool-down. If tired, trim to 5 km at pace.</div></div><div class="run-dist">10 km</div></div>
+ <div class="day-row"><div class="day-name">Sun Mar 29</div><div><div class="run-type"><strong>Easy long run</strong></div><div class="run-tip">All easy, no tempo finish. HR under 160 the whole way.</div></div><div class="run-dist">13 km</div></div>
+ </div>
+ </div>
+
+ <!-- WEEK 5 -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 5</div>
+ <div class="week-title">Taper — stay sharp</div>
+ <div class="week-badge badge-taper">Mar 30–Apr 6</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row"><div class="day-name">Tue Apr 1</div><div><div class="run-type"><strong>Easy run</strong></div><div class="run-tip">Legs should feel springy. Resist the urge to push. Trust the taper.</div></div><div class="run-dist">5 km</div></div>
+ <div class="day-row"><div class="day-name">Thu Apr 3</div><div><div class="run-type"><strong>Race pace strides</strong></div><div class="run-tip">2 km easy → 3×1km @ 4:50 with walk rest → 2 km cool-down. Stay sharp, don't grind.</div></div><div class="run-dist">6 km</div></div>
+ <div class="day-row"><div class="day-name">Sun Apr 6</div><div><div class="run-type"><strong>Last easy run</strong></div><div class="run-tip">All easy. Finish feeling like you could have done double. The work is done.</div></div><div class="run-dist">8 km</div></div>
+ </div>
+ </div>
+
+ <!-- WEEK 6 RACE WEEK -->
+ <div class="week">
+ <div class="week-header">
+ <div class="week-num">Week 6</div>
+ <div class="week-title">Race week — stay fresh</div>
+ <div class="week-badge badge-race">Apr 7–12</div>
+ </div>
+ <div class="week-days">
+ <div class="day-row rest"><div class="day-name">Mon–Wed</div><div><div class="run-type">Rest or short walk. No running.</div></div><div class="run-dist rest-label">off</div></div>
+ <div class="day-row"><div class="day-name">Thu Apr 9</div><div><div class="run-type"><strong>Mini shakeout</strong></div><div class="run-tip">10 min easy jog + 3×strides at race pace. Just to stay sharp.</div></div><div class="run-dist">3 km</div></div>
+ <div class="day-row rest"><div class="day-name">Fri Apr 10</div><div><div class="run-type">Full rest. Sleep well, eat well, hydrate all day.</div></div><div class="run-dist rest-label">off</div></div>
+ <div class="day-row"><div class="day-name">Sat Apr 11</div><div><div class="run-type"><strong>Pre-race shakeout</strong></div><div class="run-tip">10–15 min light jog + a few strides. Lay out gear tonight. Good carb dinner.</div></div><div class="run-dist">2 km</div></div>
+ <div class="day-row"><div class="day-name">Sun Apr 12</div><div><div class="run-type"><strong>🏁 RACE DAY</strong></div><div class="run-tip">Start at 5:05–5:10/km for first 5 km. Build through km 10. Gel at km 10–11 with water. Push last 5 km.</div></div><div class="run-dist">21.1 km</div></div>
+ </div>
+ </div>
+
+ <!-- Volume Chart -->
+ <div class="pace-guide" style="margin-top:40px;">
+ <div class="section-title">Weekly volume progression</div>
+ <div style="margin-top:20px; display:flex; flex-direction:column; gap:10px;">
+ <div class="vol-row"><div class="vol-label">W1 <span class="vol-dates">Mar 4–8</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-done" style="width:80%"></div></div><span class="vol-km">28 km <span class="done-badge">✓</span></span></div>
+ <div class="vol-row"><div class="vol-label">W2 <span class="vol-dates">Mar 9–15</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-done" style="width:100%"></div></div><span class="vol-km">35 km <span class="done-badge">✓</span></span></div>
+ <div class="vol-row"><div class="vol-label">W3 <span class="vol-dates">Mar 16–22</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-done" style="width:80%"></div></div><span class="vol-km">30 km <span class="done-badge">✓</span> 🔥</span></div>
+ <div class="vol-row"><div class="vol-label">W4 <span class="vol-dates">Mar 23–29</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-peak" style="width:86%"></div></div><span class="vol-km">30 km</span></div>
+ <div class="vol-row"><div class="vol-label">W5 <span class="vol-dates">Mar 30–Apr 6</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-taper" style="width:54%"></div></div><span class="vol-km">19 km</span></div>
+ <div class="vol-row"><div class="vol-label">W6 <span class="vol-dates">Apr 7–12</span></div><div class="vol-bar-wrap"><div class="vol-bar vol-race" style="width:74%"></div></div><span class="vol-km">26.1 km 🏁</span></div>
+ </div>
+ </div>
+
+ <!-- Pace Guide -->
+ <div class="pace-guide">
+ <div class="section-title">Pace reference guide</div>
+ <div class="pace-grid">
+ <div class="pace-item"><div class="pace-name">Easy</div><div class="pace-val">5:45 – 6:05 /km</div><div class="pace-desc">Can hold a full conversation. Should feel like you could go much faster.</div></div>
+ <div class="pace-item"><div class="pace-name">Race Pace</div><div class="pace-val">4:58 – 5:02 /km</div><div class="pace-desc">Comfortably hard. Breathing elevated but controlled. Short sentences only.</div></div>
+ <div class="pace-item"><div class="pace-name">Tempo</div><div class="pace-val">4:43 – 4:50 /km</div><div class="pace-desc">Hard effort for intervals. Used in Week 1–3 sessions. Updated from your actual data.</div></div>
+ </div>
+ </div>
+
+ <!-- Insights -->
+ <div class="key-insight">
+ <div class="section-title">2025 race vs 2026 — you're better prepared</div>
+ <p>Last year you ran <strong>1:45:41 at 5:02/km</strong> on significantly weaker prep: easy runs at 6:20–6:40/km, weekly peaks of ~24km, one threshold session in 3 months, and a 2-week gap in February. This year your easy pace is already 40–50 sec/km faster, you're hitting 35km peak weeks, and doing structured intervals every week.</p>
+ <p>The one edge last year had: <strong>your easy runs were genuinely easy</strong> (6:30+/km), so you arrived fresher. This year you push too hard on recovery days — HR hitting 163–170 on runs that should be 145–155. Nail that and 1:44 is very realistic. <strong>1:42 is possible.</strong></p>
+ <p><strong>Week 3 highlight:</strong> 5km sustained at 4:43–4:48/km + 16.2km long run with negative split and HR 151 avg. You're in the best shape of the training block.</p>
+ </div>
+
+ <div class="race-block">
+ <div class="big">1:44</div>
+ <div class="sub">Your target. 5:00/km × 21.1 km. You've got this. 🏁</div>
+ </div>
+
+</div>
+</body>
+</html>
